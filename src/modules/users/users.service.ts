@@ -1,22 +1,46 @@
+import { HttpException, HttpStatus } from '@nestjs/common';
 import { UserCreateDto } from './dto/userCreate.dto';
+import { UserGetDto } from './dto/userGet.dto';
 import { IUserCreateResponse, IUsersData } from './users.interface';
 import { v4 as uuid } from 'uuid';
+import { findUserByEmail } from './utils';
 
 export class UsersService {
-  private usersDB: Record<string, IUsersData> = {};
+  private usersDB: Record<string, IUsersData> = {
+    '1': {
+      name: 'Admin',
+      id: '1',
+      surName: 'Admin',
+      fullName: 'Admin',
+      password: 'admin',
+      email: 'admin@inno.tech',
+    },
+  };
 
-  getAll(): IUsersData[] {
-    return Object.values(this.usersDB);
+  getAll(): UserGetDto[] {
+    return Object.values(this.usersDB).map(
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      ({ password, ...rest }: IUsersData) => ({ ...rest }),
+    );
   }
 
-  createUser(data: UserCreateDto): IUserCreateResponse {
+  createUser({ email, name, ...rest }: UserCreateDto): IUserCreateResponse {
     const id = uuid();
 
-    this.usersDB[id] = { ...data, id };
+    const checkIsEmailUnique = findUserByEmail(this.usersDB, email);
 
-    const { name } = data;
+    if (checkIsEmailUnique)
+      throw new HttpException('Already exist', HttpStatus.CONFLICT);
+
+    this.usersDB[id] = { ...rest, email, name, id };
 
     return { name, id };
+  }
+
+  findOneByEmail(email: string): IUsersData | null {
+    const user = findUserByEmail(this.usersDB, email);
+
+    return user || null;
   }
 
   deleteUser(id: string): void {

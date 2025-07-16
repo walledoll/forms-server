@@ -1,4 +1,3 @@
-import { Optional } from '@nestjs/common';
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsBoolean,
@@ -23,6 +22,14 @@ export class UserCreateDto {
   surName: string;
 
   @IsNotEmpty()
+  @ApiProperty({ description: 'password', nullable: false })
+  password: string;
+
+  @IsNotEmpty()
+  @MaxLength(130)
+  @ApiProperty({ description: 'User full name', nullable: false })
+  fullName: string;
+
   @IsEmail()
   @ApiProperty({ description: 'User email', nullable: false })
   email: string;
