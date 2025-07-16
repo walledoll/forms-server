@@ -15,8 +15,8 @@ import { AuthGuard } from './auth.guard';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { jwtConstants } from './constants';
 
-@ApiTags('auth')
-@Controller('auth')
+@ApiTags('api/v1/auth')
+@Controller('api/v1/auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
