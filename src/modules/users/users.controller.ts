@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   HttpStatus,
+  NotFoundException,
   Param,
   Post,
   Response,
@@ -11,7 +12,6 @@ import {
 } from '@nestjs/common';
 import {
   ApiBasicAuth,
-  ApiCookieAuth,
   ApiCreatedResponse,
   ApiOperation,
   ApiResponse,
@@ -35,6 +35,13 @@ export class UsersController {
   @Get()
   getAll(): UserGetDto[] {
     return this.usersService.getAll();
+  }
+
+  @UseGuards(AuthGuard)
+  @Get(':id')
+  @ApiOperation({ summary: 'Get user by id' })
+  getUser(@Param('id') id: string): UserGetDto | NotFoundException {
+    return this.usersService.findById(id);
   }
 
   @UseGuards(AuthGuard)

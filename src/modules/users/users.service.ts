@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus } from '@nestjs/common';
+import { HttpException, HttpStatus, NotFoundException } from '@nestjs/common';
 import { UserCreateDto } from './dto/userCreate.dto';
 import { UserGetDto } from './dto/userGet.dto';
 import { IUserCreateResponse, IUsersData } from './users.interface';
@@ -35,6 +35,14 @@ export class UsersService {
     this.usersDB[id] = { ...rest, email, name, id };
 
     return { name, id };
+  }
+
+  findById(id: string): UserGetDto | NotFoundException {
+    const user = this.usersDB[id];
+
+    if (!user) throw new NotFoundException();
+
+    return user;
   }
 
   findOneByEmail(email: string): IUsersData | null {
