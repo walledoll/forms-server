@@ -6,6 +6,7 @@ import {
   HttpStatus,
   NotFoundException,
   Param,
+  Patch,
   Post,
   Response,
   UseGuards,
@@ -22,6 +23,7 @@ import { IUserCreateResponse } from './users.interface';
 import { UserCreateDto } from './dto/userCreate.dto';
 import { UserGetDto } from './dto/userGet.dto';
 import { AuthGuard } from '../auth/auth.guard';
+import { UserPatchDto } from './dto/userPatch.dto';
 
 @ApiBasicAuth()
 @ApiTags('users')
@@ -42,6 +44,13 @@ export class UsersController {
   @ApiOperation({ summary: 'Get user by id' })
   getUser(@Param('id') id: string): UserGetDto | NotFoundException {
     return this.usersService.findById(id);
+  }
+
+  @UseGuards(AuthGuard)
+  @Patch(':id')
+  @ApiOperation({ summary: 'Update user' })
+  updateUser(@Param('id') id: string, @Body() data: UserPatchDto) {
+    return this.usersService.updateUser(id, data);
   }
 
   @UseGuards(AuthGuard)

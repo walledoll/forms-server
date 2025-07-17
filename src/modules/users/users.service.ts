@@ -4,6 +4,7 @@ import { UserGetDto } from './dto/userGet.dto';
 import { IUserCreateResponse, IUsersData } from './users.interface';
 import { v4 as uuid } from 'uuid';
 import { findUserByEmail } from './utils';
+import { UserPatchDto } from './dto/userPatch.dto';
 
 export class UsersService {
   private usersDB: Record<string, IUsersData> = {
@@ -42,7 +43,22 @@ export class UsersService {
 
     if (!user) throw new NotFoundException();
 
-    return user;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, ...response } = user;
+    return response;
+  }
+
+  updateUser(id: string, data: UserPatchDto): string | NotFoundException {
+    const user = this.usersDB[id];
+
+    if (!user) {
+      if (!user) throw new NotFoundException();
+    }
+
+    const { password, email, id: userId } = user;
+    this.usersDB[id] = { password, id: userId, email, ...data };
+
+    return 'ok';
   }
 
   findOneByEmail(email: string): IUsersData | null {

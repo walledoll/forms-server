@@ -40,7 +40,7 @@ export class UserGetDto {
   birthDate?: Date;
 
   @IsOptional()
-  @IsPhoneNumber()
+  @IsPhoneNumber('RU')
   @ApiProperty({ description: 'User phone', nullable: true })
   telephone?: string;
 

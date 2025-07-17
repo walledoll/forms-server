@@ -1,17 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
-  IsBoolean,
-  IsDate,
-  IsDateString,
-  IsEmail,
   IsNotEmpty,
+  MaxLength,
   IsOptional,
+  IsDate,
   IsPhoneNumber,
   IsString,
-  MaxLength,
+  IsBoolean,
 } from 'class-validator';
 
-export class UserCreateDto {
+export class UserPatchDto {
   @IsNotEmpty()
   @MaxLength(64)
   @ApiProperty({ description: 'User name', nullable: false })
@@ -23,20 +21,12 @@ export class UserCreateDto {
   surName: string;
 
   @IsNotEmpty()
-  @ApiProperty({ description: 'password', nullable: false })
-  password: string;
-
-  @IsNotEmpty()
   @MaxLength(130)
   @ApiProperty({ description: 'User full name', nullable: false })
   fullName: string;
 
-  @IsEmail()
-  @ApiProperty({ description: 'User email', nullable: false })
-  email: string;
-
   @IsOptional()
-  @IsDateString()
+  @IsDate()
   @ApiProperty({ description: 'User birthday', nullable: true })
   birthDate?: Date;
 
@@ -46,10 +36,12 @@ export class UserCreateDto {
   telephone?: string;
 
   @IsString()
+  @IsOptional()
   @ApiProperty({ description: 'User employment', nullable: true })
   employment?: string;
 
   @IsBoolean()
+  @IsOptional()
   @ApiProperty({ description: 'User agreement', nullable: true })
   userAgreement?: boolean;
 }
