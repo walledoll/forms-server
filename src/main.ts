@@ -4,7 +4,7 @@ import { DocumentBuilder, OpenAPIObject, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
 import * as cookieParser from 'cookie-parser';
 import * as session from 'express-session';
-import cors from 'cors'
+import cors from 'cors';
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
@@ -25,10 +25,7 @@ async function bootstrap(): Promise<void> {
     new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }),
   );
 
-  app.use(cors({
-  origin: 'http://localhost:5173',
-  credentials: true // if you need to send cookies/auth headers
-}));
+
 
   app.use(
     session({
@@ -41,6 +38,10 @@ async function bootstrap(): Promise<void> {
       },
     }),
   );
+  app.enableCors({
+    origin: ['http://localhost:5173'],
+    credetials: true
+  });
 
   await app.listen(process.env.PORT ?? 4000);
 }
